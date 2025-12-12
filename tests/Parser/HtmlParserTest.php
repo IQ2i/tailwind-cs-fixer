@@ -45,8 +45,8 @@ class HtmlParserTest extends TestCase
 
     public function testParseMultipleElements(): void
     {
-        $input = '<div class="p-4 text-center"><span class="text-lg font-bold">Text</span></div>';
-        $expected = '<div class="p-4 text-center"><span class="font-bold text-lg">Text</span></div>';
+        $input = '<div class="text-center p-4"><span class="font-bold text-lg">Text</span></div>';
+        $expected = '<div class="p-4 text-center"><span class="text-lg font-bold">Text</span></div>';
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
@@ -74,8 +74,8 @@ class HtmlParserTest extends TestCase
 
     public function testParseMixedQuotes(): void
     {
-        $input = '<div class="p-4 text-center"><span class=\'text-lg font-bold\'>Text</span></div>';
-        $expected = '<div class="p-4 text-center"><span class=\'font-bold text-lg\'>Text</span></div>';
+        $input = '<div class="p-4 text-center"><span class=\'font-bold text-lg\'>Text</span></div>';
+        $expected = '<div class="p-4 text-center"><span class=\'text-lg font-bold\'>Text</span></div>';
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
@@ -87,7 +87,7 @@ class HtmlParserTest extends TestCase
             <html>
             <body>
                 <div class="flex justify-between items-center p-6 bg-white">
-                    <h1 class="text-xl font-bold">Title</h1>
+                    <h1 class="font-bold text-xl">Title</h1>
                     <button class="hover:bg-blue-700 bg-blue-500 text-white px-4 py-2">Click</button>
                 </div>
             </body>
@@ -99,8 +99,8 @@ class HtmlParserTest extends TestCase
             <html>
             <body>
                 <div class="flex items-center justify-between bg-white p-6">
-                    <h1 class="font-bold text-xl">Title</h1>
-                    <button class="bg-blue-500 hover:bg-blue-700 px-4 py-2 text-white">Click</button>
+                    <h1 class="text-xl font-bold">Title</h1>
+                    <button class="bg-blue-500 px-4 py-2 text-white hover:bg-blue-700">Click</button>
                 </div>
             </body>
             </html>

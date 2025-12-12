@@ -59,8 +59,8 @@ class FixCommandTest extends TestCase
         $this->assertSame(0, $this->commandTester->getStatusCode());
 
         $content = \file_get_contents($targetFile);
-        $this->assertStringContainsString('class="bg-blue-500 p-4 text-center rounded-lg shadow-md"', $content);
-        $this->assertStringContainsString('class="font-bold text-2xl text-white"', $content);
+        $this->assertStringContainsString('class="rounded-lg bg-blue-500 p-4 text-center shadow-md"', $content);
+        $this->assertStringContainsString('class="text-2xl font-bold text-white"', $content);
     }
 
     public function testFixTwigFile(): void
@@ -80,7 +80,7 @@ class FixCommandTest extends TestCase
 
         $content = \file_get_contents($targetFile);
         $this->assertStringContainsString('class="flex items-center justify-between bg-white p-6 shadow-lg"', $content);
-        $this->assertStringContainsString('class="font-bold text-xl {{ titleClass }}"', $content);
+        $this->assertStringContainsString('class="text-xl font-bold {{ titleClass }}"', $content);
     }
 
     public function testFixDirectory(): void

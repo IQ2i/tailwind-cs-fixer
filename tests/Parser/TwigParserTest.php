@@ -153,14 +153,14 @@ class TwigParserTest extends TestCase
     {
         $input = <<<TWIG
             <div class="p-4 {{ container }}">
-                <span class="text-lg font-bold">Text</span>
+                <span class="font-bold text-lg">Text</span>
                 <p class="{{ para }} text-base">Content</p>
             </div>
             TWIG;
 
         $expected = <<<TWIG
             <div class="p-4 {{ container }}">
-                <span class="font-bold text-lg">Text</span>
+                <span class="text-lg font-bold">Text</span>
                 <p class="{{ para }} text-base">Content</p>
             </div>
             TWIG;

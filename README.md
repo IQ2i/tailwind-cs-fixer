@@ -57,8 +57,7 @@ vendor/bin/tailwind-cs-fixer templates/ --dry-run --diff
 
 ## Issues and feature requests
 
-Please report issues and request features
-at https://github.com/iq2i/data-importer/issues.
+Please report issues and request features at https://github.com/iq2i/tailwind-cs-fixer/issues.
 
 ## License
 
