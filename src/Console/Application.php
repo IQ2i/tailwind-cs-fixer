@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace TailwindCsFixer\Console;
 
 use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Command\Command;
 use TailwindCsFixer\Console\Command\FixCommand;
 
 class Application extends BaseApplication
@@ -27,6 +28,16 @@ class Application extends BaseApplication
 
         $this->add(new FixCommand());
         $this->setDefaultCommand('fix', true);
+    }
+
+    // polyfill for `add` method, as it is not available in Symfony 8.0
+    public function add(Command $command): ?Command
+    {
+        if (\method_exists($this, 'addCommand')) {
+            return $this->addCommand($command);
+        }
+
+        return parent::add($command);
     }
 
     public function getLongVersion(): string
