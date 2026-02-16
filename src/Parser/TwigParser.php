@@ -47,20 +47,23 @@ class TwigParser
 
     private function parseMixedClasses(string $content): string
     {
-        $pattern = '/class=(["|\'])([^"\']*\{\{[^"\']*)(["|\'])/';
-
-        return \preg_replace_callback($pattern, function ($matches) {
+        return \preg_replace_callback('/class=(["|\'])(.+?)\1/s', function ($matches) {
             $quote = $matches[1];
             $fullContent = $matches[2];
 
-            $parts = \preg_split('/(\{\{[^}]+\}\})/', $fullContent, -1, \PREG_SPLIT_DELIM_CAPTURE);
+            // If no Twig expressions, skip
+            if (!\str_contains($fullContent, '{{')) {
+                return $matches[0];
+            }
+
+            $parts = $this->extractTwigExpressions($fullContent);
 
             $result = [];
             foreach ($parts as $part) {
-                if (\preg_match('/^\{\{.*\}\}$/', $part)) {
-                    $result[] = $part;
+                if ($part['type'] === 'twig') {
+                    $result[] = $part['content'];
                 } else {
-                    $trimmed = \trim($part);
+                    $trimmed = \trim($part['content']);
                     if (!empty($trimmed)) {
                         $sorted = $this->sorter->sort($trimmed);
                         $result[] = $sorted;
@@ -70,5 +73,58 @@ class TwigParser
 
             return 'class='.$quote.\implode(' ', \array_filter($result)).$quote;
         }, $content);
+    }
+
+    private function extractTwigExpressions(string $content): array
+    {
+        $parts = [];
+        $length = \strlen($content);
+        $i = 0;
+        $current = '';
+
+        while ($i < $length) {
+            // Check if we're starting a Twig expression
+            if ($i < $length - 1 && $content[$i] === '{' && $content[$i + 1] === '{') {
+                // Save any accumulated non-Twig content
+                if ($current !== '') {
+                    $parts[] = ['type' => 'static', 'content' => $current];
+                    $current = '';
+                }
+
+                // Extract the full Twig expression with balanced braces
+                $twigExpr = '{{';
+                $i += 2;
+                $braceDepth = 1;
+
+                while ($i < $length && $braceDepth > 0) {
+                    $char = $content[$i];
+
+                    if ($i < $length - 1 && $char === '{' && $content[$i + 1] === '{') {
+                        $twigExpr .= '{{';
+                        $i += 2;
+                        ++$braceDepth;
+                    } elseif ($i < $length - 1 && $char === '}' && $content[$i + 1] === '}') {
+                        $twigExpr .= '}}';
+                        $i += 2;
+                        --$braceDepth;
+                    } else {
+                        $twigExpr .= $char;
+                        ++$i;
+                    }
+                }
+
+                $parts[] = ['type' => 'twig', 'content' => $twigExpr];
+            } else {
+                $current .= $content[$i];
+                ++$i;
+            }
+        }
+
+        // Save any remaining content
+        if ($current !== '') {
+            $parts[] = ['type' => 'static', 'content' => $current];
+        }
+
+        return $parts;
     }
 }

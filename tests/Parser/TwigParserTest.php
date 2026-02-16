@@ -167,4 +167,28 @@ class TwigParserTest extends TestCase
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
+
+    public function testParseTwigWithReplaceFilter(): void
+    {
+        $input = '<div>{{ key|replace({\'_\': \' \'}) }}</div>';
+        $expected = '<div>{{ key|replace({\'_\': \' \'}) }}</div>';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testParseTwigTernaryInClass(): void
+    {
+        $input = '<button class="{{ items|length > 0 ? \'download-btn\' : \'estimate-btn\' }}">Text</button>';
+        $expected = '<button class="{{ items|length > 0 ? \'download-btn\' : \'estimate-btn\' }}">Text</button>';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testParseTwigTernaryWithStaticClasses(): void
+    {
+        $input = '<button class="p-4 {{ items|length > 0 ? \'download-btn\' : \'estimate-btn\' }} text-white">Text</button>';
+        $expected = '<button class="p-4 {{ items|length > 0 ? \'download-btn\' : \'estimate-btn\' }} text-white">Text</button>';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
 }
