@@ -34,7 +34,7 @@ class TwigParser
 
     private function parseStaticClasses(string $content): string
     {
-        $pattern = '/class=(["|\'])(?!.*\{\{)([^"\']*)(\1)/';
+        $pattern = '/class=(["|\'])(?!.*(?:\{\{|\{%))([^"\']*)(\1)/';
 
         return \preg_replace_callback($pattern, function ($matches) {
             $quote = $matches[1];
@@ -52,7 +52,7 @@ class TwigParser
             $fullContent = $matches[2];
 
             // If no Twig expressions, skip
-            if (!\str_contains($fullContent, '{{')) {
+            if (!\str_contains($fullContent, '{{') && !\str_contains($fullContent, '{%')) {
                 return $matches[0];
             }
 
@@ -83,7 +83,7 @@ class TwigParser
         $current = '';
 
         while ($i < $length) {
-            // Check if we're starting a Twig expression
+            // Check if we're starting a Twig variable expression {{ ... }}
             if ($i < $length - 1 && $content[$i] === '{' && $content[$i + 1] === '{') {
                 // Save any accumulated non-Twig content
                 if ($current !== '') {
@@ -114,6 +114,28 @@ class TwigParser
                 }
 
                 $parts[] = ['type' => 'twig', 'content' => $twigExpr];
+            } elseif ($i < $length - 1 && $content[$i] === '{' && $content[$i + 1] === '%') {
+                // Check if we're starting a Twig block tag {% ... %}
+                if ($current !== '') {
+                    $parts[] = ['type' => 'static', 'content' => $current];
+                    $current = '';
+                }
+
+                // Extract until closing %}
+                $twigBlock = '{%';
+                $i += 2;
+
+                while ($i < $length) {
+                    if ($i < $length - 1 && $content[$i] === '%' && $content[$i + 1] === '}') {
+                        $twigBlock .= '%}';
+                        $i += 2;
+                        break;
+                    }
+                    $twigBlock .= $content[$i];
+                    ++$i;
+                }
+
+                $parts[] = ['type' => 'twig', 'content' => $twigBlock];
             } else {
                 $current .= $content[$i];
                 ++$i;

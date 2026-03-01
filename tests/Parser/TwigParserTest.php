@@ -191,4 +191,20 @@ class TwigParserTest extends TestCase
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
+
+    public function testParseTwigBlockTagOnly(): void
+    {
+        $input = '<div class="{% if not loop.first %}mt-5{% endif %}">';
+        $expected = '<div class="{% if not loop.first %} mt-5 {% endif %}">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testParseTwigBlockTagWithStaticClasses(): void
+    {
+        $input = '<div class="relative flex items-center gap-6 pb-8 group {% if loop.last %}last:pb-0{% endif %}">';
+        $expected = '<div class="relative flex items-center gap-6 pb-8 group {% if loop.last %} last:pb-0 {% endif %}">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
 }
