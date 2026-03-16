@@ -207,4 +207,13 @@ class TwigParserTest extends TestCase
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
+
+    public function testParseTwigBlockTagWithMultilineClassAttribute(): void
+    {
+        $input = '<div class="flex flex-1 flex-col gap-2
+        {% if not filter.isPrimary %}max-lg:hidden{% endif %}">';
+        $expected = '<div class="flex flex-1 flex-col gap-2 {% if not filter.isPrimary %} max-lg:hidden {% endif %}">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
 }

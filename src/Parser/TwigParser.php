@@ -34,7 +34,7 @@ class TwigParser
 
     private function parseStaticClasses(string $content): string
     {
-        $pattern = '/class=(["|\'])(?!.*(?:\{\{|\{%))([^"\']*)(\1)/';
+        $pattern = '/class=(["|\'])(?![^"\']*(?:\{\{|\{%))([^"\']*)(\1)/';
 
         return \preg_replace_callback($pattern, function ($matches) {
             $quote = $matches[1];
