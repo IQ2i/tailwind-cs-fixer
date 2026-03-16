@@ -26,9 +26,9 @@ class TailwindClassSorter
         // Box Sizing
         'box-border', 'box-content',
 
-        // Position (before display!)
-        'absolute', 'fixed', 'relative', 'static', 'sticky',
-        'inset', 'inset-x', 'inset-y', 'inset-s', 'inset-e', 'top', 'right', 'bottom', 'left',
+        // Position (before display!) - Tailwind CSS order: static, fixed, absolute, relative, sticky
+        'static', 'fixed', 'absolute', 'relative', 'sticky',
+        'inset', 'inset-x', 'inset-y', 'inset-s', 'inset-e', 'bottom', 'left', 'right', 'top',
 
         // Visibility
         'visible', 'invisible', 'collapse',
@@ -36,11 +36,11 @@ class TailwindClassSorter
         // Z-Index
         'z',
 
-        // Spacing - Margin (BEFORE display!)
-        'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml', 'ms', 'me', 'mbs', 'mbe',
+        // Spacing - Margin (BEFORE display!) - directionals alphabetical: b, l, r, t
+        'm', 'mx', 'my', 'mb', 'ml', 'mr', 'mt', 'ms', 'me', 'mbs', 'mbe',
 
-        // Display
-        'block', 'flex', 'inline-flex', 'grid', 'inline-grid', 'table', 'table-row', 'table-cell', 'flow-root', 'hidden', 'inline', 'inline-block',
+        // Display - Tailwind CSS order
+        'block', 'inline-block', 'inline', 'flex', 'inline-flex', 'grid', 'inline-grid', 'table', 'table-row', 'table-cell', 'flow-root', 'hidden',
 
         // Space Between (AFTER display!)
         'space-x', 'space-y',
@@ -50,7 +50,7 @@ class TailwindClassSorter
 
         // Sizing - Height before Width! (base values, then max, then min)
         'h', 'max-h', 'min-h',
-        'w', 'max-w', 'min-w',
+        'w', 'min-w', 'max-w',
         'size',
         'max-block', 'min-block',
         'max-inline', 'min-inline',
@@ -58,7 +58,10 @@ class TailwindClassSorter
         // Flex Container
         'flex-row', 'flex-row-reverse', 'flex-col', 'flex-col-reverse',
         'flex-wrap', 'flex-wrap-reverse', 'flex-nowrap',
-        'flex-grow', 'flex-shrink', 'flex-none', 'flex-initial', 'flex-auto',
+        'flex-grow', 'grow',       // v3: flex-grow-*, v4: grow-*
+        'flex-shrink', 'shrink',   // v3: flex-shrink-*, v4: shrink-*
+        'flex-none', 'flex-initial', 'flex-auto',
+        'basis',                   // flex-basis (v3 & v4)
 
         // Grid Container
         'grid-flow',
@@ -76,12 +79,12 @@ class TailwindClassSorter
         // Gap
         'gap', 'gap-x', 'gap-y',
 
-        // Borders - Radius before width before color
+        // Borders - Radius before width before color - directionals alphabetical
         'rounded', 'rounded-t', 'rounded-r', 'rounded-b', 'rounded-l',
         'rounded-tl', 'rounded-tr', 'rounded-br', 'rounded-bl',
         'rounded-s', 'rounded-e',
-        'border', 'border-t', 'border-r', 'border-b', 'border-l', 'border-x', 'border-y',
-        'border-s', 'border-e', 'border-bs', 'border-be',
+        'border', 'border-b', 'border-e', 'border-l', 'border-r', 'border-s', 'border-t', 'border-x', 'border-y',
+        'border-bs', 'border-be',
         'border-solid', 'border-dashed', 'border-dotted', 'border-double', 'border-none',
         'divide', // divide-x, divide-y, divide-{color} handled by getDivideSubOrder
         'outline', 'outline-offset',
@@ -91,8 +94,8 @@ class TailwindClassSorter
         'bg', // This covers bg-opacity, bg-cover, bg-contain, bg-fixed, and colors
         'from', 'via', 'to', // Gradient color stops
 
-        // Spacing - Padding
-        'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl', 'ps', 'pe', 'pbs', 'pbe',
+        // Spacing - Padding - directionals alphabetical: b, l, r, t
+        'p', 'px', 'py', 'pb', 'pl', 'pr', 'pt', 'ps', 'pe', 'pbs', 'pbe',
 
         // Typography - Text (alignment, size) → Font → Leading → Text (opacity, color)
         'text', // This covers text-left, text-center, text-right, text-sm, text-lg, colors, etc.
@@ -102,7 +105,9 @@ class TailwindClassSorter
         'uppercase', 'lowercase', 'capitalize', 'normal-case',
         'italic', 'not-italic',
         'underline', 'line-through', 'no-underline', 'overline',
-        'decoration', 'decoration-slice', 'decoration-clone',
+        'decoration',
+        'decoration-slice', 'decoration-clone',         // v3
+        'box-decoration-slice', 'box-decoration-clone', // v4
         'antialiased', 'subpixel-antialiased',
 
         // Lists
@@ -111,14 +116,14 @@ class TailwindClassSorter
         // Whitespace
         'whitespace', 'break',
 
-        // Effects
-        'shadow', 'shadow-inner', 'shadow-none',
+        // Effects - opacity before shadow
         'opacity',
+        'shadow', 'shadow-inner', 'shadow-none',
         'mix-blend',
         'bg-blend',
 
-        // Filters
-        'blur', 'brightness', 'contrast', 'grayscale', 'hue-rotate', 'invert', 'saturate', 'sepia',
+        // Filters (alphabetical: blur, brightness, contrast, drop-shadow, grayscale, hue-rotate, invert, saturate, sepia)
+        'blur', 'brightness', 'contrast', 'drop-shadow', 'grayscale', 'hue-rotate', 'invert', 'saturate', 'sepia',
         'backdrop-blur', 'backdrop-brightness', 'backdrop-contrast', 'backdrop-grayscale',
         'backdrop-hue-rotate', 'backdrop-invert', 'backdrop-opacity', 'backdrop-saturate', 'backdrop-sepia',
 
@@ -133,18 +138,18 @@ class TailwindClassSorter
         'ease', 'ease-in', 'ease-out', 'ease-in-out', 'ease-linear',
         'animate',
 
-        // Transforms
-        'transform', 'transform-gpu', 'transform-none',
-        'scale', 'scale-x', 'scale-y',
-        'rotate',
+        // Transforms - Tailwind CSS order: translate, rotate, scale, skew, transform (base last)
         'translate', 'translate-x', 'translate-y',
+        'rotate',
+        'scale', 'scale-x', 'scale-y',
         'skew', 'skew-x', 'skew-y',
+        'transform', 'transform-gpu', 'transform-none',
         'origin',
 
-        // Interactivity
+        // Interactivity - pointer-events before cursor
         'group', 'peer',
-        'cursor',
         'pointer-events',
+        'cursor',
         'resize',
         'scroll',
         'select',
@@ -301,7 +306,7 @@ class TailwindClassSorter
             if ('text' === $prefix) {
                 $subOrder = $this->getTextSubOrder($lookupClass);
 
-                return $baseOrder + ($subOrder * 0.01);
+                return $baseOrder + ($subOrder * 0.001);
             }
 
             return $baseOrder;
@@ -381,6 +386,16 @@ class TailwindClassSorter
                 return 'pointer-events';
             }
 
+            // Handle drop-shadow (v3: drop-shadow, v4: drop-shadow-xs/sm/md/lg/xl/2xl)
+            if ('drop' === $firstPart && 'shadow' === $secondPart) {
+                return 'drop-shadow';
+            }
+
+            // Handle box-decoration (v4: box-decoration-slice, box-decoration-clone)
+            if ('box' === $firstPart && 'decoration' === $secondPart) {
+                return 'box-decoration';
+            }
+
             // Keep divide as a single prefix for all divide-* utilities
             // getDivideSubOrder will handle the internal ordering
             // (no special case here, just return 'divide')
@@ -427,15 +442,6 @@ class TailwindClassSorter
                 return \strcmp($baseA, $baseB);
             }
 
-            // Special ordering for shadow-* classes (size order, not alphabetical)
-            if ('shadow' === $prefixA) {
-                $orderA = $this->getShadowSubOrder($baseA);
-                $orderB = $this->getShadowSubOrder($baseB);
-                if ($orderA !== $orderB) {
-                    return $orderA <=> $orderB;
-                }
-            }
-
             // Special ordering for divide-* classes (direction before style before color)
             if ('divide' === $prefixA) {
                 $orderA = $this->getDivideSubOrder($baseA);
@@ -458,36 +464,37 @@ class TailwindClassSorter
 
     private function getTextSubOrder(string $class): int
     {
-        // text-left, text-center, text-right (alignment) = 0
-        if (\preg_match('/^text-(left|center|right|justify|start|end)$/', $class)) {
-            return 0;
+        // text-left, text-center, text-right (alignment) - Tailwind CSS order (left=0, center=1, right=2)
+        // Multiplied by 0.001 in getClassOrder: 0, 0.001, 0.002 — all below size (0.01) and font (0.015)
+        if (\preg_match('/^text-(left|center|right|justify|start|end)$/', $class, $matches)) {
+            return ['left' => 0, 'center' => 1, 'right' => 2, 'justify' => 3, 'start' => 4, 'end' => 5][$matches[1]];
         }
 
-        // text-xs, text-sm, text-base, text-lg, etc. (size) = 1
+        // text-xs, text-sm, text-base, text-lg, etc. (size) = 10 → 0.01
         if (\preg_match('/^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)$/', $class)) {
-            return 1;
+            return 10;
         }
 
-        // leading is at 1.5 (0.015), font is at 2.5 (0.025)
+        // font is at 0.015, leading is at 0.025 (set in buildOrderMap)
 
-        // text-opacity-* = 3 (after font)
+        // text-opacity-* = 30 → 0.03 (after font 0.015 and leading 0.025)
         if (\str_starts_with($class, 'text-opacity-')) {
-            return 3;
+            return 30;
         }
 
-        // text-{color} (colors) = 4 (after opacity)
-        return 4;
+        // text-{color} (colors) = 40 → 0.04 (after opacity)
+        return 40;
     }
 
     private function getBgSubOrder(string $class): int
     {
-        // bg-opacity-* = 0
-        if (\str_starts_with($class, 'bg-opacity-')) {
+        // bg-{color} = 0 (first, per Prettier)
+        if (\preg_match('/^bg-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black|transparent|current|inherit)(-|$)/', $class)) {
             return 0;
         }
 
-        // bg-{color} = 1
-        if (\preg_match('/^bg-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|white|black|transparent|current|inherit)-/', $class)) {
+        // bg-opacity-* = 1
+        if (\str_starts_with($class, 'bg-opacity-')) {
             return 1;
         }
 
@@ -511,53 +518,6 @@ class TailwindClassSorter
         return 2;
     }
 
-    private function getShadowSubOrder(string $class): int
-    {
-        // Shadow size ordering: (none), sm, (default), md, lg, xl, 2xl
-        // shadow (default) = 2
-        if ('shadow' === $class) {
-            return 2;
-        }
-
-        // shadow-none = 0
-        if ('shadow-none' === $class) {
-            return 0;
-        }
-
-        // shadow-sm = 1
-        if ('shadow-sm' === $class) {
-            return 1;
-        }
-
-        // shadow-md = 3
-        if ('shadow-md' === $class) {
-            return 3;
-        }
-
-        // shadow-lg = 4
-        if ('shadow-lg' === $class) {
-            return 4;
-        }
-
-        // shadow-xl = 5
-        if ('shadow-xl' === $class) {
-            return 5;
-        }
-
-        // shadow-2xl = 6
-        if ('shadow-2xl' === $class) {
-            return 6;
-        }
-
-        // shadow-inner = 7
-        if ('shadow-inner' === $class) {
-            return 7;
-        }
-
-        // shadow-{color} = 8 (colors last)
-        return 8;
-    }
-
     private function extractNumericValue(string $class): ?float
     {
         // Extract base class without variants
@@ -567,8 +527,8 @@ class TailwindClassSorter
         // Match numeric values like p-4, text-2xl, w-1/2
         if (\preg_match('/-(\d+(?:\.\d+)?)(?:\/(\d+))?$/', $baseClass, $matches)) {
             if (isset($matches[2])) {
-                // Fraction like w-1/2
-                return (float) $matches[1] / (float) $matches[2];
+                // Fraction like w-1/2 - use null so strcmp is used (matches Prettier's alphabetical sort)
+                return null;
             }
 
             return (float) $matches[1];
@@ -584,9 +544,9 @@ class TailwindClassSorter
         }
 
         // Special adjustments for typography ordering
-        // Text sub-orders: alignment(0), size(1) → leading(0.15) → font(0.25) → opacity(3), color(4)
+        // Text sub-orders: alignment(0), size(1) → font(0.15) → leading(0.25) → opacity(3), color(4)
         $textOrder = $this->orderMap['text'];
-        $this->orderMap['leading'] = $textOrder + 0.015; // Between size (0.01) and opacity (0.03)
-        $this->orderMap['font'] = $textOrder + 0.025; // After leading
+        $this->orderMap['font'] = $textOrder + 0.015; // Between size (0.01) and leading (0.025)
+        $this->orderMap['leading'] = $textOrder + 0.025; // After font
     }
 }

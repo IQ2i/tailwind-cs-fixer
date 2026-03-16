@@ -32,7 +32,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortLayoutClasses(): void
     {
         $input = 'z-50 static block relative';
-        $expected = 'relative static z-50 block';
+        $expected = 'static relative z-50 block';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -40,7 +40,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortPositionClasses(): void
     {
         $input = 'left-0 top-0 bottom-0 right-0 inset-0';
-        $expected = 'inset-0 top-0 right-0 bottom-0 left-0';
+        $expected = 'inset-0 bottom-0 left-0 right-0 top-0';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -48,7 +48,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortDisplayClasses(): void
     {
         $input = 'inline-block hidden block flex inline grid';
-        $expected = 'block flex grid hidden inline inline-block';
+        $expected = 'block inline-block inline flex grid hidden';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -112,7 +112,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortMarginClasses(): void
     {
         $input = 'ml-4 mt-2 mr-8 mb-4 mx-auto my-6';
-        $expected = 'mx-auto my-6 mt-2 mr-8 mb-4 ml-4';
+        $expected = 'mx-auto my-6 mb-4 ml-4 mr-8 mt-2';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -120,7 +120,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortPaddingClasses(): void
     {
         $input = 'pt-2 p-4 pb-8 px-6 py-3';
-        $expected = 'p-4 px-6 py-3 pt-2 pb-8';
+        $expected = 'p-4 px-6 py-3 pb-8 pt-2';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -148,7 +148,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortWidthClasses(): void
     {
         $input = 'max-w-7xl w-full min-w-0 w-1/2';
-        $expected = 'w-1/2 w-full max-w-7xl min-w-0';
+        $expected = 'w-1/2 w-full min-w-0 max-w-7xl';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -176,7 +176,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortTypographyClasses(): void
     {
         $input = 'text-center font-bold text-2xl leading-tight';
-        $expected = 'text-center text-2xl leading-tight font-bold';
+        $expected = 'text-center text-2xl font-bold leading-tight';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -192,7 +192,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortTextAlignment(): void
     {
         $input = 'text-right text-center text-left';
-        $expected = 'text-center text-left text-right';
+        $expected = 'text-left text-center text-right';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -220,7 +220,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortBackgroundClasses(): void
     {
         $input = 'bg-blue-500 bg-opacity-50 bg-cover';
-        $expected = 'bg-opacity-50 bg-blue-500 bg-cover';
+        $expected = 'bg-blue-500 bg-opacity-50 bg-cover';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -248,7 +248,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortBorderDirectional(): void
     {
         $input = 'border-l border-t border';
-        $expected = 'border border-t border-l';
+        $expected = 'border border-l border-t';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -276,7 +276,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortEffectClasses(): void
     {
         $input = 'opacity-50 shadow-xl blur-sm';
-        $expected = 'shadow-xl opacity-50 blur-sm';
+        $expected = 'opacity-50 shadow-xl blur-sm';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -284,7 +284,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortShadowClasses(): void
     {
         $input = 'shadow-2xl shadow shadow-md';
-        $expected = 'shadow shadow-md shadow-2xl';
+        $expected = 'shadow shadow-2xl shadow-md';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -316,7 +316,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortTransformClasses(): void
     {
         $input = 'translate-x-4 scale-110 rotate-45 transform';
-        $expected = 'transform scale-110 rotate-45 translate-x-4';
+        $expected = 'translate-x-4 rotate-45 scale-110 transform';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -328,7 +328,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortInteractivityClasses(): void
     {
         $input = 'select-none pointer-events-none cursor-pointer';
-        $expected = 'cursor-pointer pointer-events-none select-none';
+        $expected = 'pointer-events-none cursor-pointer select-none';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -432,7 +432,7 @@ class TailwindClassSorterTest extends TestCase
     public function testSortFractionOrder(): void
     {
         $input = 'w-1/2 w-1/4 w-3/4';
-        $expected = 'w-1/4 w-1/2 w-3/4';
+        $expected = 'w-1/2 w-1/4 w-3/4';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
@@ -768,6 +768,82 @@ class TailwindClassSorterTest extends TestCase
     {
         $input = 'w-4 min-inline-4 h-4 max-block-4 min-block-4 max-inline-4';
         $expected = 'h-4 w-4 max-block-4 min-block-4 max-inline-4 min-inline-4';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    // ========================================
+    // Tailwind CSS v3 → v4 renamed classes
+    // ========================================
+
+    public function testSortV4GrowShrink(): void
+    {
+        // v4: grow/shrink replace flex-grow/flex-shrink
+        $input = 'grow flex p-4 shrink-0';
+        $expected = 'flex grow shrink-0 p-4';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortV3FlexGrowShrink(): void
+    {
+        // v3: flex-grow/flex-shrink still supported
+        $input = 'flex-grow flex p-4 flex-shrink-0';
+        $expected = 'flex flex-grow flex-shrink-0 p-4';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortDropShadow(): void
+    {
+        // drop-shadow sorts in filters section (after effects/shadow, after blur alphabetically)
+        $input = 'shadow-md drop-shadow-lg p-4 blur-sm';
+        $expected = 'p-4 shadow-md blur-sm drop-shadow-lg';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortV4ShadowScale(): void
+    {
+        // v4 shadow scale: shadow-xs (was shadow-sm), shadow-sm (was shadow)
+        $input = 'shadow-xl shadow-sm shadow-xs shadow-md';
+        $expected = 'shadow-md shadow-sm shadow-xl shadow-xs';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortV4BlurScale(): void
+    {
+        // v4 blur scale: blur-xs (was blur-sm), blur-sm (was blur)
+        $input = 'blur-lg blur-sm blur-xs blur-md';
+        $expected = 'blur-lg blur-md blur-sm blur-xs';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortBoxDecorationV4(): void
+    {
+        // v4: box-decoration-slice/clone sort in typography section (after text colors)
+        $input = 'p-4 box-decoration-slice text-white';
+        $expected = 'p-4 text-white box-decoration-slice';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortDecorationV3(): void
+    {
+        // v3: decoration-slice/clone sort in typography section (after text colors)
+        $input = 'p-4 decoration-slice text-white';
+        $expected = 'p-4 text-white decoration-slice';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortFlexBasis(): void
+    {
+        // basis-* (flex-basis) sorts with flex container properties
+        $input = 'flex basis-1/2 grow p-4';
+        $expected = 'flex grow basis-1/2 p-4';
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
