@@ -140,6 +140,7 @@ class TailwindClassSorter
         'origin',
 
         // Interactivity
+        'group', 'peer',
         'cursor',
         'pointer-events',
         'resize',
@@ -301,8 +302,8 @@ class TailwindClassSorter
             return $baseOrder;
         }
 
-        // Unknown classes go to the end
-        return 999999;
+        // Unknown classes go to the beginning (like prettier-plugin-tailwindcss)
+        return -1;
     }
 
     private function extractPrefix(string $class): string

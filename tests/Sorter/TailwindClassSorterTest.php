@@ -669,4 +669,32 @@ class TailwindClassSorterTest extends TestCase
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
+
+    // ========================================
+    // Custom (non-Tailwind) classes
+    // ========================================
+
+    public function testCustomClassesGoFirst(): void
+    {
+        $input = 'flex p-4 btn text-white btn-primary';
+        $expected = 'btn btn-primary flex p-4 text-white';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testCustomClassesOnlyGoFirst(): void
+    {
+        $input = 'p-4 btn btn-primary';
+        $expected = 'btn btn-primary p-4';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testCustomClassesGoFirstWithVariants(): void
+    {
+        $input = 'text-center btn hover:bg-blue-500 btn-primary';
+        $expected = 'btn btn-primary text-center hover:bg-blue-500';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
 }
