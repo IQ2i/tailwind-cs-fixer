@@ -68,7 +68,7 @@ class TwigParser
 
             $result = [];
             foreach ($parts as $part) {
-                if ($part['type'] === 'twig') {
+                if ('twig' === $part['type']) {
                     $result[] = $part['content'];
                 } else {
                     $trimmed = \trim($part['content']);
@@ -92,9 +92,9 @@ class TwigParser
 
         while ($i < $length) {
             // Check if we're starting a Twig variable expression {{ ... }}
-            if ($i < $length - 1 && $content[$i] === '{' && $content[$i + 1] === '{') {
+            if ($i < $length - 1 && '{' === $content[$i] && '{' === $content[$i + 1]) {
                 // Save any accumulated non-Twig content
-                if ($current !== '') {
+                if ('' !== $current) {
                     $parts[] = ['type' => 'static', 'content' => $current];
                     $current = '';
                 }
@@ -107,11 +107,11 @@ class TwigParser
                 while ($i < $length && $braceDepth > 0) {
                     $char = $content[$i];
 
-                    if ($i < $length - 1 && $char === '{' && $content[$i + 1] === '{') {
+                    if ($i < $length - 1 && '{' === $char && '{' === $content[$i + 1]) {
                         $twigExpr .= '{{';
                         $i += 2;
                         ++$braceDepth;
-                    } elseif ($i < $length - 1 && $char === '}' && $content[$i + 1] === '}') {
+                    } elseif ($i < $length - 1 && '}' === $char && '}' === $content[$i + 1]) {
                         $twigExpr .= '}}';
                         $i += 2;
                         --$braceDepth;
@@ -122,9 +122,9 @@ class TwigParser
                 }
 
                 $parts[] = ['type' => 'twig', 'content' => $twigExpr];
-            } elseif ($i < $length - 1 && $content[$i] === '{' && $content[$i + 1] === '%') {
+            } elseif ($i < $length - 1 && '{' === $content[$i] && '%' === $content[$i + 1]) {
                 // Check if we're starting a Twig block tag {% ... %}
-                if ($current !== '') {
+                if ('' !== $current) {
                     $parts[] = ['type' => 'static', 'content' => $current];
                     $current = '';
                 }
@@ -134,7 +134,7 @@ class TwigParser
                 $i += 2;
 
                 while ($i < $length) {
-                    if ($i < $length - 1 && $content[$i] === '%' && $content[$i + 1] === '}') {
+                    if ($i < $length - 1 && '%' === $content[$i] && '}' === $content[$i + 1]) {
                         $twigBlock .= '%}';
                         $i += 2;
                         break;
@@ -151,7 +151,7 @@ class TwigParser
         }
 
         // Save any remaining content
-        if ($current !== '') {
+        if ('' !== $current) {
             $parts[] = ['type' => 'static', 'content' => $current];
         }
 
