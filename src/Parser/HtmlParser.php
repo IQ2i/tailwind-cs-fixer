@@ -26,6 +26,14 @@ class HtmlParser
 
     public function parse(string $content): string
     {
+        $comments = [];
+        $content = \preg_replace_callback('/<!--.*?-->/s', function ($matches) use (&$comments) {
+            $placeholder = "\x00C".\count($comments)."\x00";
+            $comments[$placeholder] = $matches[0];
+
+            return $placeholder;
+        }, $content);
+
         $patterns = [
             '/class="([^"]+)"/',
             "/class='([^']+)'/",
@@ -41,6 +49,6 @@ class HtmlParser
             }, $content);
         }
 
-        return $content;
+        return \str_replace(\array_keys($comments), \array_values($comments), $content);
     }
 }

@@ -108,4 +108,20 @@ class HtmlParserTest extends TestCase
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
+
+    public function testDoesNotSortClassesInsideHtmlComments(): void
+    {
+        $input = '<!-- <div class="p-4 flex"> --><div class="p-4 flex"></div>';
+        $expected = '<!-- <div class="p-4 flex"> --><div class="flex p-4"></div>';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testDoesNotSortClassesInsideMultilineHtmlComments(): void
+    {
+        $input = "<!--\n<div class=\"p-4 flex\">\n-->\n<div class=\"p-4 flex\"></div>";
+        $expected = "<!--\n<div class=\"p-4 flex\">\n-->\n<div class=\"flex p-4\"></div>";
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
 }

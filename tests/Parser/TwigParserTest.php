@@ -216,4 +216,28 @@ class TwigParserTest extends TestCase
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
+
+    public function testDoesNotSortClassesInsideTwigComments(): void
+    {
+        $input = '{# <div class="p-4 flex"> #}<div class="p-4 flex"></div>';
+        $expected = '{# <div class="p-4 flex"> #}<div class="flex p-4"></div>';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testDoesNotSortClassesInsideHtmlComments(): void
+    {
+        $input = '<!-- <div class="p-4 flex"> --><div class="p-4 flex"></div>';
+        $expected = '<!-- <div class="p-4 flex"> --><div class="flex p-4"></div>';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testDoesNotSortClassesInsideMultilineTwigComments(): void
+    {
+        $input = "{# old:\n<div class=\"p-4 flex\">\n#}\n<div class=\"p-4 flex\"></div>";
+        $expected = "{# old:\n<div class=\"p-4 flex\">\n#}\n<div class=\"flex p-4\"></div>";
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
 }
