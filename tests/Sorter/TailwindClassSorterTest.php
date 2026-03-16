@@ -671,6 +671,36 @@ class TailwindClassSorterTest extends TestCase
     }
 
     // ========================================
+    // NEGATIVE VALUES
+    // ========================================
+
+    public function testSortNegativeMargin(): void
+    {
+        $input = 'p-4 -mt-4 text-white -mx-2';
+        $expected = '-mx-2 -mt-4 p-4 text-white';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortNegativeTranslate(): void
+    {
+        // -translate-x-1/2 (0.5) sorts before translate-x-4 (4) numerically
+        $input = 'translate-x-4 -translate-x-1/2 -translate-y-2';
+        $expected = '-translate-x-1/2 translate-x-4 -translate-y-2';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortNegativeWithVariant(): void
+    {
+        // mt-2 (2) sorts before -mt-4 (4) numerically; variant goes after plain
+        $input = 'hover:-mt-1 -mt-4 mt-2';
+        $expected = 'mt-2 -mt-4 hover:-mt-1';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    // ========================================
     // Custom (non-Tailwind) classes
     // ========================================
 

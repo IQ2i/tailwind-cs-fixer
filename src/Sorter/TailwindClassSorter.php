@@ -284,19 +284,22 @@ class TailwindClassSorter
 
     private function getClassOrder(string $class): float
     {
+        // Handle negative value classes (e.g. -mt-4, -translate-x-1/2)
+        $lookupClass = \str_starts_with($class, '-') ? \substr($class, 1) : $class;
+
         // Try exact match first
-        if (isset($this->orderMap[$class])) {
-            return $this->orderMap[$class];
+        if (isset($this->orderMap[$lookupClass])) {
+            return $this->orderMap[$lookupClass];
         }
 
         // Try prefix match
-        $prefix = $this->extractPrefix($class);
+        $prefix = $this->extractPrefix($lookupClass);
         if (isset($this->orderMap[$prefix])) {
             $baseOrder = $this->orderMap[$prefix];
 
             // Add fractional sub-order for text classes to position them correctly relative to font/leading
             if ('text' === $prefix) {
-                $subOrder = $this->getTextSubOrder($class);
+                $subOrder = $this->getTextSubOrder($lookupClass);
 
                 return $baseOrder + ($subOrder * 0.01);
             }
@@ -310,6 +313,11 @@ class TailwindClassSorter
 
     private function extractPrefix(string $class): string
     {
+        // Handle negative value classes (e.g. -mt-4, -translate-x-1/2)
+        if (\str_starts_with($class, '-')) {
+            $class = \substr($class, 1);
+        }
+
         // Handle arbitrary values like w-[42px]
         if (\str_contains($class, '[')) {
             $bracketPos = \strpos($class, '[');
