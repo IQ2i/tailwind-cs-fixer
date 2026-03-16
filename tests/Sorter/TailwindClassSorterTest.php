@@ -697,4 +697,48 @@ class TailwindClassSorterTest extends TestCase
 
         $this->assertEquals($expected, $this->sorter->sort($input));
     }
+
+    // ========================================
+    // Tailwind CSS v4.2.0 - Logical properties
+    // ========================================
+
+    public function testSortPaddingBlockLogicalProperties(): void
+    {
+        $input = 'p-4 pbe-2 pb-4 pbs-2 ps-4 pe-2';
+        $expected = 'p-4 pb-4 ps-4 pe-2 pbs-2 pbe-2';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortMarginBlockLogicalProperties(): void
+    {
+        $input = 'm-4 mbe-2 mb-4 mbs-2 ms-4 me-2';
+        $expected = 'm-4 mb-4 ms-4 me-2 mbs-2 mbe-2';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortInsetLogicalProperties(): void
+    {
+        $input = 'top-0 inset-s-2 inset-e-2 inset-0';
+        $expected = 'inset-0 inset-s-2 inset-e-2 top-0';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortBorderBlockLogicalProperties(): void
+    {
+        $input = 'border-be border-t border-bs border';
+        $expected = 'border border-t border-bs border-be';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
+
+    public function testSortBlockInlineSizeLogicalProperties(): void
+    {
+        $input = 'w-4 min-inline-4 h-4 max-block-4 min-block-4 max-inline-4';
+        $expected = 'h-4 w-4 max-block-4 min-block-4 max-inline-4 min-inline-4';
+
+        $this->assertEquals($expected, $this->sorter->sort($input));
+    }
 }

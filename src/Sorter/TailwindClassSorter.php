@@ -28,7 +28,7 @@ class TailwindClassSorter
 
         // Position (before display!)
         'absolute', 'fixed', 'relative', 'static', 'sticky',
-        'inset', 'inset-x', 'inset-y', 'top', 'right', 'bottom', 'left',
+        'inset', 'inset-x', 'inset-y', 'inset-s', 'inset-e', 'top', 'right', 'bottom', 'left',
 
         // Visibility
         'visible', 'invisible', 'collapse',
@@ -37,7 +37,7 @@ class TailwindClassSorter
         'z',
 
         // Spacing - Margin (BEFORE display!)
-        'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml',
+        'm', 'mx', 'my', 'mt', 'mr', 'mb', 'ml', 'ms', 'me', 'mbs', 'mbe',
 
         // Display
         'block', 'flex', 'inline-flex', 'grid', 'inline-grid', 'table', 'table-row', 'table-cell', 'flow-root', 'hidden', 'inline', 'inline-block',
@@ -52,6 +52,8 @@ class TailwindClassSorter
         'h', 'max-h', 'min-h',
         'w', 'max-w', 'min-w',
         'size',
+        'max-block', 'min-block',
+        'max-inline', 'min-inline',
 
         // Flex Container
         'flex-row', 'flex-row-reverse', 'flex-col', 'flex-col-reverse',
@@ -79,7 +81,7 @@ class TailwindClassSorter
         'rounded-tl', 'rounded-tr', 'rounded-br', 'rounded-bl',
         'rounded-s', 'rounded-e',
         'border', 'border-t', 'border-r', 'border-b', 'border-l', 'border-x', 'border-y',
-        'border-s', 'border-e',
+        'border-s', 'border-e', 'border-bs', 'border-be',
         'border-solid', 'border-dashed', 'border-dotted', 'border-double', 'border-none',
         'divide', // divide-x, divide-y, divide-{color} handled by getDivideSubOrder
         'outline', 'outline-offset',
@@ -90,7 +92,7 @@ class TailwindClassSorter
         'from', 'via', 'to', // Gradient color stops
 
         // Spacing - Padding
-        'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl',
+        'p', 'px', 'py', 'pt', 'pr', 'pb', 'pl', 'ps', 'pe', 'pbs', 'pbe',
 
         // Typography - Text (alignment, size) → Font → Leading → Text (opacity, color)
         'text', // This covers text-left, text-center, text-right, text-sm, text-lg, colors, etc.
@@ -342,8 +344,8 @@ class TailwindClassSorter
             $firstPart = $parts[0];
             $secondPart = $parts[1] ?? '';
 
-            // Handle min-* and max-* specially (min-w, max-w, min-h, max-h)
-            if (('min' === $firstPart || 'max' === $firstPart) && \in_array($secondPart, ['w', 'h'])) {
+            // Handle min-* and max-* specially (min-w, max-w, min-h, max-h, min-block, max-block, min-inline, max-inline)
+            if (('min' === $firstPart || 'max' === $firstPart) && \in_array($secondPart, ['w', 'h', 'block', 'inline'])) {
                 return $firstPart.'-'.$secondPart;
             }
 
