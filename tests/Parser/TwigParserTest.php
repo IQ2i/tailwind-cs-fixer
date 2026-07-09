@@ -240,4 +240,44 @@ class TwigParserTest extends TestCase
 
         $this->assertEquals($expected, $this->parser->parse($input));
     }
+
+    public function testDoesNotAddSpaceBeforeTwigVariableGluedToStaticPrefix(): void
+    {
+        $input = '<div class="meteo-graph__panel meteo-graph__panel--{{ metric }}">';
+        $expected = '<div class="meteo-graph__panel meteo-graph__panel--{{ metric }}">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testDoesNotAddSpaceAfterTwigVariableGluedToStaticSuffix(): void
+    {
+        $input = '<div class="{{ metric }}--panel meteo-graph__panel">';
+        $expected = '<div class="{{ metric }}--panel meteo-graph__panel">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testDoesNotAddSpaceBetweenTwoGluedTwigVariables(): void
+    {
+        $input = '<div class="prefix-{{ a }}-{{ b }}-suffix">';
+        $expected = '<div class="prefix-{{ a }}-{{ b }}-suffix">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testStillSortsSurroundingStaticClassesWhenGluedTwigVariableIsPresent(): void
+    {
+        $input = '<div class="text-center p-4 meteo-graph__panel--{{ metric }} bg-blue-500">';
+        $expected = '<div class="p-4 text-center meteo-graph__panel--{{ metric }} bg-blue-500">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
+
+    public function testDoesNotAddSpaceBetweenGluedTwigVariableAndSurroundingWordsOnBothSides(): void
+    {
+        $input = '<div class="{{ a }}word{{ b }}">';
+        $expected = '<div class="{{ a }}word{{ b }}">';
+
+        $this->assertEquals($expected, $this->parser->parse($input));
+    }
 }
