@@ -353,57 +353,53 @@ class TailwindClassSorter
 
         $parts = \explode('-', $class);
 
-        if (\count($parts) >= 2) {
-            $firstPart = $parts[0];
-            $secondPart = $parts[1] ?? '';
+        $firstPart = $parts[0];
+        $secondPart = $parts[1];
 
-            // Handle min-* and max-* specially (min-w, max-w, min-h, max-h, min-block, max-block, min-inline, max-inline)
-            if (('min' === $firstPart || 'max' === $firstPart) && \in_array($secondPart, ['w', 'h', 'block', 'inline'])) {
-                return $firstPart.'-'.$secondPart;
-            }
-
-            // Handle directional utilities (border-t, rounded-tr, etc.)
-            // BUT exclude 'divide' because divide-x and divide-y should have prefix 'divide', not 'divide-x'/'divide-y'
-            if ('divide' !== $firstPart && \in_array($secondPart, ['t', 'r', 'b', 'l', 'x', 'y', 's', 'e', 'tl', 'tr', 'bl', 'br', 'ss', 'se', 'es', 'ee'])) {
-                return $firstPart.'-'.$secondPart;
-            }
-
-            // Handle special cases
-            if ('grid' === $firstPart && \in_array($secondPart, ['cols', 'rows', 'flow'])) {
-                return $firstPart.'-'.$secondPart;
-            }
-
-            if ('auto' === $firstPart && \in_array($secondPart, ['cols', 'rows'])) {
-                return $firstPart.'-'.$secondPart;
-            }
-
-            if ('flex' === $firstPart && \in_array($secondPart, ['row', 'col', 'wrap', 'grow', 'shrink', 'none', 'initial', 'auto'])) {
-                return $firstPart.'-'.$secondPart;
-            }
-
-            // Handle pointer-events specially (pointer-events-none, pointer-events-auto, etc.)
-            if ('pointer' === $firstPart && 'events' === $secondPart) {
-                return 'pointer-events';
-            }
-
-            // Handle drop-shadow (v3: drop-shadow, v4: drop-shadow-xs/sm/md/lg/xl/2xl)
-            if ('drop' === $firstPart && 'shadow' === $secondPart) {
-                return 'drop-shadow';
-            }
-
-            // Handle box-decoration (v4: box-decoration-slice, box-decoration-clone)
-            if ('box' === $firstPart && 'decoration' === $secondPart) {
-                return 'box-decoration';
-            }
-
-            // Keep divide as a single prefix for all divide-* utilities
-            // getDivideSubOrder will handle the internal ordering
-            // (no special case here, just return 'divide')
-
-            return $firstPart;
+        // Handle min-* and max-* specially (min-w, max-w, min-h, max-h, min-block, max-block, min-inline, max-inline)
+        if (('min' === $firstPart || 'max' === $firstPart) && \in_array($secondPart, ['w', 'h', 'block', 'inline'])) {
+            return $firstPart.'-'.$secondPart;
         }
 
-        return $class;
+        // Handle directional utilities (border-t, rounded-tr, etc.)
+        // BUT exclude 'divide' because divide-x and divide-y should have prefix 'divide', not 'divide-x'/'divide-y'
+        if ('divide' !== $firstPart && \in_array($secondPart, ['t', 'r', 'b', 'l', 'x', 'y', 's', 'e', 'tl', 'tr', 'bl', 'br', 'ss', 'se', 'es', 'ee'])) {
+            return $firstPart.'-'.$secondPart;
+        }
+
+        // Handle special cases
+        if ('grid' === $firstPart && \in_array($secondPart, ['cols', 'rows', 'flow'])) {
+            return $firstPart.'-'.$secondPart;
+        }
+
+        if ('auto' === $firstPart && \in_array($secondPart, ['cols', 'rows'])) {
+            return $firstPart.'-'.$secondPart;
+        }
+
+        if ('flex' === $firstPart && \in_array($secondPart, ['row', 'col', 'wrap', 'grow', 'shrink', 'none', 'initial', 'auto'])) {
+            return $firstPart.'-'.$secondPart;
+        }
+
+        // Handle pointer-events specially (pointer-events-none, pointer-events-auto, etc.)
+        if ('pointer' === $firstPart && 'events' === $secondPart) {
+            return 'pointer-events';
+        }
+
+        // Handle drop-shadow (v3: drop-shadow, v4: drop-shadow-xs/sm/md/lg/xl/2xl)
+        if ('drop' === $firstPart && 'shadow' === $secondPart) {
+            return 'drop-shadow';
+        }
+
+        // Handle box-decoration (v4: box-decoration-slice, box-decoration-clone)
+        if ('box' === $firstPart && 'decoration' === $secondPart) {
+            return 'box-decoration';
+        }
+
+        // Keep divide as a single prefix for all divide-* utilities
+        // getDivideSubOrder will handle the internal ordering
+        // (no special case here, just return 'divide')
+
+        return $firstPart;
     }
 
     private function compareNumericValues(string $a, string $b): int
