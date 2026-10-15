@@ -7,63 +7,34 @@ on:
     pull_request:
         branches:
             - main
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 jobs:
-    php-cs-fixer:
-        runs-on: ubuntu-latest
+    security:
+        uses: IQ2i/.github/.github/workflows/php-security.yml@main
+        with:
+            no-check-lock: true
 
-        steps:
-            - uses: actions/checkout@v6
+    cs:
+        uses: IQ2i/.github/.github/workflows/php-cs.yml@main
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.4
-                  coverage: none
+    sa:
+        uses: IQ2i/.github/.github/workflows/php-stan.yml@main
 
-            - name: Install dependencies
-              uses: ramsey/composer-install@v3
+    tests:
+        uses: IQ2i/.github/.github/workflows/php-tests.yml@main
+        with:
+            php-versions: '["8.1", "8.2", "8.3", "8.4", "8.5"]'
 
-            - name: PHP-CS-Fixer
-              run: php vendor/bin/php-cs-fixer fix --dry-run --diff --no-ansi
-
-    phpstan:
-        runs-on: ubuntu-latest
-
-        steps:
-            - uses: actions/checkout@v6
-
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.5
-                  coverage: none
-
-            - name: Install dependencies
-              uses: ramsey/composer-install@v3
-
-            - name: PHPStan
-              run: php vendor/bin/phpstan analyse
-
-    phpunit:
-        strategy:
-            matrix:
-                operating-system: [ 'ubuntu-latest' ]
-                php-version: [ '8.1', '8.2', '8.3', '8.4', '8.5' ]
-
-        runs-on: ${{ matrix.operating-system }}
-
-        steps:
-            - uses: actions/checkout@v6
-
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: ${{ matrix.php-version }}
-                  coverage: none
-
-            - name: Install dependencies
-              uses: ramsey/composer-install@v3
-
-            - name: Test PHPUnit
-              run: php vendor/bin/phpunit
+    tests-lowest:
+        uses: IQ2i/.github/.github/workflows/php-tests.yml@main
+        with:
+            php-versions: '["8.1"]'
+            dependency-versions: lowest
