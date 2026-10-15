@@ -27,7 +27,7 @@ class HtmlParser
     public function parse(string $content): string
     {
         $comments = [];
-        $content = \preg_replace_callback('/<!--.*?-->/s', function ($matches) use (&$comments) {
+        $content = \preg_replace_callback('/<!--.*?-->/s', static function ($matches) use (&$comments) {
             $placeholder = "\x00C".\count($comments)."\x00";
             $comments[$placeholder] = $matches[0];
 
