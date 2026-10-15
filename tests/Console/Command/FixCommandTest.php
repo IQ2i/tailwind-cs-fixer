@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace TailwindCsFixer\Tests\Console\Command;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use TailwindCsFixer\Console\Command\FixCommand;
+use TailwindCsFixer\Console\Application;
 
 class FixCommandTest extends TestCase
 {
@@ -31,7 +30,6 @@ class FixCommandTest extends TestCase
         \mkdir($this->tempDir, 0o777, true);
 
         $application = new Application();
-        $application->add(new FixCommand());
         $command = $application->find('fix');
         $this->commandTester = new CommandTester($command);
     }
