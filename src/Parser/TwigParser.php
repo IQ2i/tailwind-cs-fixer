@@ -65,21 +65,68 @@ class TwigParser
             }
 
             $parts = $this->extractTwigExpressions($fullContent);
+            $lastIndex = \count($parts) - 1;
 
-            $result = [];
-            foreach ($parts as $part) {
-                if ('twig' === $part['type']) {
-                    $result[] = $part['content'];
-                } else {
-                    $trimmed = \trim($part['content']);
-                    if (!empty($trimmed)) {
-                        $sorted = $this->sorter->sort($trimmed);
-                        $result[] = $sorted;
+            $result = '';
+            foreach ($parts as $index => $part) {
+                // {% %} block tags (e.g. {% if %}) delimit a conditionally
+                // rendered class, so they always need surrounding whitespace
+                // to avoid merging into neighbouring classes at runtime.
+                if ('block' === $part['type']) {
+                    $result = \rtrim($result);
+                    if ('' !== $result) {
+                        $result .= ' ';
                     }
+                    $result .= $part['content'].' ';
+
+                    continue;
+                }
+
+                // {{ }} variable expressions are appended as-is: they may be
+                // glued to a static prefix/suffix on purpose (e.g. a BEM
+                // modifier like `panel--{{ metric }}`), so we must not
+                // invent whitespace that wasn't in the original markup.
+                if ('expr' === $part['type']) {
+                    $result .= $part['content'];
+
+                    continue;
+                }
+
+                $hasLeadingSpace = '' !== $part['content'] && \ctype_space($part['content'][0]);
+                $hasTrailingSpace = '' !== $part['content'] && \ctype_space(\substr($part['content'], -1));
+                $trimmed = \trim($part['content']);
+
+                if ('' === $trimmed) {
+                    $rtrimmed = \rtrim($result);
+                    if ('' !== $rtrimmed && ($hasLeadingSpace || $hasTrailingSpace)) {
+                        $result = $rtrimmed.' ';
+                    }
+
+                    continue;
+                }
+
+                // A token glued to a neighbouring Twig expression (no space
+                // in between) must keep its position after sorting, otherwise
+                // sorting could move it away from the expression it's glued to.
+                $tokens = \preg_split('/\s+/', $trimmed);
+                $gluedFirstToken = 0 !== $index && !$hasLeadingSpace ? \array_shift($tokens) : null;
+                $gluedLastToken = $lastIndex !== $index && !$hasTrailingSpace && [] !== $tokens ? \array_pop($tokens) : null;
+
+                $sortedMiddle = [] !== $tokens ? $this->sorter->sort(\implode(' ', $tokens)) : '';
+                $sorted = \implode(' ', \array_filter([$gluedFirstToken, $sortedMiddle, $gluedLastToken], static fn ($token) => null !== $token && '' !== $token));
+
+                if ($hasLeadingSpace && '' !== $result && ' ' !== \substr($result, -1)) {
+                    $result .= ' ';
+                }
+
+                $result .= $sorted;
+
+                if ($hasTrailingSpace) {
+                    $result .= ' ';
                 }
             }
 
-            return 'class='.$quote.\implode(' ', \array_filter($result)).$quote;
+            return 'class='.$quote.\trim($result).$quote;
         }, $content);
     }
 
@@ -121,7 +168,7 @@ class TwigParser
                     }
                 }
 
-                $parts[] = ['type' => 'twig', 'content' => $twigExpr];
+                $parts[] = ['type' => 'expr', 'content' => $twigExpr];
             } elseif ($i < $length - 1 && '{' === $content[$i] && '%' === $content[$i + 1]) {
                 // Check if we're starting a Twig block tag {% ... %}
                 if ('' !== $current) {
@@ -143,7 +190,7 @@ class TwigParser
                     ++$i;
                 }
 
-                $parts[] = ['type' => 'twig', 'content' => $twigBlock];
+                $parts[] = ['type' => 'block', 'content' => $twigBlock];
             } else {
                 $current .= $content[$i];
                 ++$i;
