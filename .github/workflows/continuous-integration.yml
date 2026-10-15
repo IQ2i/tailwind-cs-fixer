@@ -23,8 +23,6 @@ jobs:
 
             - name: Install dependencies
               uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: ${{ matrix.dependencies }}
 
             - name: PHP-CS-Fixer
               run: php vendor/bin/php-cs-fixer fix --dry-run --diff --no-ansi
@@ -43,8 +41,6 @@ jobs:
 
             - name: Install dependencies
               uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: ${{ matrix.dependencies }}
 
             - name: PHPStan
               run: php vendor/bin/phpstan analyse
@@ -63,13 +59,11 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ matrix.php_version }}
+                  php-version: ${{ matrix.php-version }}
                   coverage: none
 
             - name: Install dependencies
               uses: ramsey/composer-install@v3
-              with:
-                  dependency-versions: ${{ matrix.dependencies }}
 
             - name: Test PHPUnit
               run: php vendor/bin/phpunit
